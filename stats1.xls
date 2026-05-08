@@ -1,0 +1,121 @@
+"Notes"	"State"	"State Code"	Deaths	Population	Crude Rate	Crude Rate Lower 95% Confidence Interval	Crude Rate Upper 95% Confidence Interval
+	"New Mexico"	"35"	208	3367585	6.2	5.3	7.0
+	"Mississippi"	"28"	232	4678933	5.0	4.3	5.6
+	"Arizona"	"04"	515	12045013	4.3	3.9	4.6
+	"Texas"	"48"	1816	50741116	3.6	3.4	3.7
+	"Alabama"	"01"	280	7851442	3.6	3.1	4.0
+	"Louisiana"	"22"	259	7353010	3.5	3.1	4.0
+	"Oklahoma"	"40"	221	6546987	3.4	2.9	3.8
+	"Arkansas"	"05"	150	4769282	3.1	2.6	3.6
+	"Nevada"	"32"	156	4987617	3.1	2.6	3.6
+	"Georgia"	"13"	547	17793173	3.1	2.8	3.3
+	"Wyoming"	"56"	27	894879	3.0	2.0	4.4
+	"Florida"	"12"	950	32296943	2.9	2.8	3.1
+	"Alaska"	"02"	35	1279147	2.7	1.9	3.8
+	"Tennessee"	"47"	305	11153704	2.7	2.4	3.0
+	"South Carolina"	"45"	221	8142882	2.7	2.4	3.1
+	"Kentucky"	"21"	181	7051223	2.6	2.2	2.9
+	"South Dakota"	"46"	34	1395592	2.4	1.7	3.4
+	"Michigan"	"26"	363	15803184	2.3	2.1	2.5
+	"Kansas"	"20"	109	4751435	2.3	1.9	2.7
+	"California"	"06"	1495	66558934	2.2	2.1	2.4
+	"North Carolina"	"37"	381	17120476	2.2	2.0	2.4
+	"Delaware"	"10"	32	1499160	2.1	1.5	3.0
+	"West Virginia"	"54"	54	2587973	2.1	1.6	2.7
+	"New Jersey"	"34"	282	13675132	2.1	1.8	2.3
+	"Maryland"	"24"	191	9425622	2.0	1.7	2.3
+	"New York"	"36"	640	32052143	2.0	1.8	2.2
+	"Ohio"	"39"	365	18292898	2.0	1.8	2.2
+	"Missouri"	"29"	192	9691719	2.0	1.7	2.3
+	"Illinois"	"17"	393	20204148	1.9	1.8	2.1
+	"Indiana"	"18"	207	10914026	1.9	1.6	2.2
+	"Utah"	"49"	114	6131331	1.9	1.5	2.2
+	"Nebraska"	"31"	56	3135861	1.8	1.3	2.3
+	"Wisconsin"	"55"	145	9059802	1.6	1.3	1.9
+	"Montana"	"30"	27	1706635	1.6	1.0	2.3
+	"Virginia"	"51"	217	13926993	1.6	1.4	1.8
+	"Pennsylvania"	"42"	300	19949507	1.5	1.3	1.7
+	"Hawaii"	"15"	32	2184350	1.5	1.0	2.1
+	"Idaho"	"16"	43	2982257	1.4	1.0	1.9
+	"Connecticut"	"09"	79	5566224	1.4	1.1	1.8
+	"Colorado"	"08"	142	10173269	1.4	1.2	1.6
+	"North Dakota"	"38"	19	1386192	1.4	0.8	2.1
+	"Minnesota"	"27"	112	8789957	1.3	1.0	1.5
+	"District of Columbia"	"11"	20	1573632	1.3	0.8	2.0
+	"Iowa"	"19"	64	5037253	1.3	1.0	1.6
+	"Washington"	"53"	140	12903216	1.1	0.9	1.3
+	"Massachusetts"	"25"	124	11761178	1.1	0.9	1.2
+	"Oregon"	"41"	70	6723742	1.0	0.8	1.3
+	"New Hampshire"	"33"	20	2088193	1.0	0.6	1.5
+	"Maine"	"23"	18	1921504	0.9	0.6	1.5
+	"Rhode Island"	"44"	17	1820944	0.9	0.5	1.5
+"---"
+"Dataset: Underlying Cause of Death, 2018-2024, Single Race"
+"Query Parameters:"
+"ICD-10 Codes: U07.1 (COVID-19)"
+"Single-Year Ages: 18 years; 19 years; 20 years; 21 years; 22 years; 23 years; 24 years; 25 years; 26 years; 27 years; 28 years;"
+"29 years; 30 years; 31 years; 32 years; 33 years; 34 years"
+"Group By: State"
+"Show Totals: Disabled"
+"Show Zero Values: False"
+"Show Suppressed: False"
+"Calculate Rates Per: 100,000"
+"Rate Options: Default intercensal populations for years 2001-2009 (except Infant Age Groups)"
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/ucd-expanded.html for more information."
+"---"
+"Query Date: Apr 28, 2026 2:37:00 PM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Mortality 2018-2024 on CDC WONDER Online Database, released in 2026. Data are from the Multiple Cause of Death Files,"
+"2018-2024, as compiled from data provided by the 57 vital statistics jurisdictions through the Vital Statistics Cooperative"
+"Program. Accessed at http://wonder.cdc.gov/ucd-icd10-expanded.html on Apr 28, 2026 2:37:00 PM"
+"---"
+Messages:
+"1. Totals are not available for these results due to suppression constraints. More Information:"
+"http://wonder.cdc.gov/wonder/help/faq.html#Privacy."
+"2. Rows with suppressed Deaths are hidden. Use Quick Options above to show suppressed rows."
+"---"
+Caveats:
+"1. Data are Suppressed when the data meet the criteria for confidentiality constraints. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd-expanded.html#Assurance of Confidentiality."
+"2. Deaths of persons with Age ""Not Stated"" are included in ""All"" counts and rates, but are not distributed among age groups,"
+"so are not included in age-specific counts, age-specific rates or in any age-adjusted rates. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd-expanded.html#Not Stated."
+"3. The method used to calculate 95% confidence intervals is documented here: More information:"
+"http://wonder.cdc.gov/wonder/help/ucd-expanded.html#Confidence-Intervals."
+"4. The population figures for year 2024 are single-race estimates of the July 1 resident population, from the Vintage 2024"
+"postcensal series released by the Census Bureau on June 27, 2024. The 2024 series is based on the Modified Blended Base produced"
+"by the US Census Bureau in lieu of the April 1, 2020 decennial population count. The Modified Blended Base consists of the blend"
+"of Vintage 2020 postcensal population estimates for April 1, 2020, 2020 Demographic Analysis Estimates, and 2020 Census data"
+"from the internal Census Edited File (CEF). The population figures for year 2023 are single-race estimates of the July 1"
+"resident population, from the Vintage 2023 postcensal series released by the Census Bureau on June 27, 2024. The 2023 series is"
+"based on the Modified Blended Base produced by the US Census Bureau in lieu of the April 1, 2020 decennial population count. The"
+"Modified Blended Base consists of the blend of Vintage 2020 postcensal population estimates for April 1, 2020, 2020 Demographic"
+"Analysis Estimates, and 2020 Census data from the internal Census Edited File (CEF). The population figures for years 2022 are"
+"single-race estimates of the July 1 resident population, from the Vintage 2022 postcensal series released by the Census Bureau"
+"on June 22, 2023. The 2022 series is based on the Modified Blended Base produced by the US Census Bureau in lieu of the April 1,"
+"2020 decennial population count. The Modified Blended Base consists of the blend of Vintage 2020 postcensal population estimates"
+"for April 1, 2020, 2020 Demographic Analysis Estimates, and 2020 Census data from the internal Census Edited File (CEF). The"
+"population figures for years 2021 are single-race estimates of the July 1 resident population, based on the Blended Base"
+"produced by the US Census Bureau in lieu of the April 1, 2020 decennial population count, from the Vintage 2021 postcensal"
+"series released by the Census Bureau on June 30, 2022. The population figures for year 2020 are single-race estimates of the"
+"July 1 resident population, from the Vintage 2020 postcensal series based on April 2010 Census, released by the Census Bureau on"
+"July 27, 2021. The population figures for year 2019 are single-race estimates of the July 1 resident population, from the"
+"Vintage 2019 postcensal series based on April 2010 Census, released by the Census Bureau on June 25, 2020. The population"
+"figures for year 2018 are single-race estimates of the July 1 resident population, from the Vintage 2018 postcensal series based"
+"on April 2010 Census, released by the Census Bureau on June 20, 2019. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd-expanded.html#Population Data."
+"5. Connecticut population estimates for 2022 and later years are reported for 9 planning regions as county equivalent areas,"
+"instead of the former 8 legacy counties in the Vintage 2022 postcensal series released by the Census Bureau on June 22, 2023,"
+"and in the Vintage 2023 postcensal series released by the Census Bureau on June 27, 2024. Populations estimates for the former"
+"counties are not available for 2022 and later years. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd-expanded.html#Connecticut-2022."
+"6. After the creation of the final 2023 dataset, North Carolina updated the cause of death information for over 900 death"
+"certificates to include a cause of death code indicating drug overdose (ICD-10 underlying cause-of-death codes: X40-X44,"
+"X60-X64, X85, and Y10-Y14). Jurisdictions can continue to update death certificates after the closing of the mortality file. As"
+"a result, users should consider that the actual death count for drug overdose deaths for North Carolina in 2023 is over 4,400"
+"deaths, with a crude rate of approximately 41.0 per 100,000 population, and an age-adjusted rate of approximately 42.1 per"
+"100,000 population. These deaths will not be updated on the final mortality datasets."
+"7. Changes to cause of death classification affect reporting trends. More information:"
+"http://wonder.cdc.gov/wonder/help/ucd-expanded.html#ICD-10 Changes."
