@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Young Who Didn't Make It — COVID-19 Among Young Adults</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --ink-mid: #3d3d3d;
+    --ink-light: #6b6b6b;
+    --rule: #c8c0b0;
+    --paper: #faf8f4;
+    --paper-dark: #f0ece3;
+    --accent: #9b1c1c;
+    --accent-light: #fef2f2;
+    --blue: #1e3a5f;
+    --blue-light: #dbeafe;
+    --amber: #92400e;
+    --amber-light: #fffbeb;
+    --teal: #0f4c3a;
+    --teal-light: #d1fae5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.75;
+  }
+
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 14px 24px 10px;
+    border-bottom: 3px solid var(--accent);
+  }
+  .masthead-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #aaa;
+    margin-bottom: 6px;
+  }
+  .masthead-pub {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 13px;
+    color: #ccc;
+    letter-spacing: 1px;
+  }
+
+  .hero {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 64px 24px 56px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+  }
+  .hero-kicker {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.08;
+    max-width: 820px;
+    margin: 0 auto 20px;
+    color: #fff;
+  }
+  .hero-deck {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    max-width: 640px;
+    margin: 0 auto 32px;
+    color: #bbb;
+    line-height: 1.5;
+  }
+  .hero-byline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #888;
+  }
+  .hero-byline strong { color: #ccc; }
+
+  .rule-triple {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+    margin: 32px auto;
+    width: 80px;
+  }
+  .rule-triple span { display: block; height: 1px; flex: 1; background: var(--rule); }
+  .rule-triple span:nth-child(2) { height: 3px; background: var(--accent); }
+
+  .article-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .lede {
+    font-size: 21px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: var(--ink-mid);
+    padding: 40px 0 24px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 32px;
+  }
+  .lede .drop-cap::first-letter {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 80px;
+    font-weight: 700;
+    float: left;
+    line-height: 0.72;
+    margin-right: 8px;
+    margin-top: 8px;
+    color: var(--ink);
+  }
+
+  p { margin-bottom: 1.2em; }
+  p:last-child { margin-bottom: 0; }
+
+  .stat-trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin: 36px 0;
+  }
+  .stat-box {
+    background: var(--paper);
+    padding: 20px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    line-height: 1.3;
+  }
+
+  .pullquote {
+    border-left: 4px solid var(--accent);
+    padding: 16px 24px;
+    margin: 36px 0;
+    background: var(--paper-dark);
+  }
+  .pullquote p {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .pullquote cite {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    display: block;
+    margin-top: 10px;
+  }
+
+  .section-header {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-top: 3px solid var(--accent);
+    border-bottom: 1px solid var(--rule);
+    padding: 10px 0;
+    margin: 48px 0 24px;
+  }
+
+  .chart-block {
+    margin: 36px 0;
+    border: 1px solid var(--rule);
+    background: #fff;
+  }
+  .chart-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .chart-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .chart-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.5px;
+  }
+  .chart-body { padding: 20px; }
+
+  .state-selector-section {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 48px 24px;
+    margin: 48px -24px;
+    text-align: center;
+  }
+  .state-selector-section h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #fff;
+  }
+  .state-selector-section p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: #aaa;
+    margin-bottom: 24px;
+  }
+  .state-select-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .state-select-wrap label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+  }
+  select#stateSelect {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    padding: 10px 36px 10px 16px;
+    background: #2a2a2a;
+    color: #fff;
+    border: 1px solid #555;
+    appearance: none;
+    cursor: pointer;
+    min-width: 220px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23999' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  select#stateSelect:focus { outline: 2px solid var(--accent); }
+
+  .state-result {
+    display: none;
+    margin-top: 32px;
+    animation: fadeIn 0.5s ease;
+  }
+  .state-result.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  .state-result-card {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    padding: 28px;
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: left;
+  }
+  .state-result-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .state-result-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  .state-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: #333;
+  }
+  .state-metric {
+    background: #2a2a2a;
+    padding: 16px;
+  }
+  .state-metric-val {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .state-metric-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #888;
+    line-height: 1.3;
+  }
+
+  .article-body {
+    display: none;
+    animation: fadeIn 0.6s ease;
+  }
+  .article-body.visible { display: block; }
+
+  .comparison-banner {
+    background: var(--paper-dark);
+    border: 1px solid var(--rule);
+    border-left: 5px solid var(--accent);
+    padding: 20px 24px;
+    margin: 32px 0;
+  }
+  .comparison-banner .label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .comparison-banner .text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .comparison-banner .text strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .map-block {
+    margin: 36px 0;
+    border: 1px solid var(--rule);
+    background: #fff;
+  }
+  #choropleth { width: 100%; }
+
+  .legend-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 20px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--ink-light);
+    flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+  .legend-swatch { width: 16px; height: 10px; border-radius: 2px; }
+  .legend-label { font-size: 10px; }
+
+  .poverty-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 28px 0;
+  }
+  .poverty-card {
+    border: 1px solid var(--rule);
+    padding: 20px 16px;
+    background: #fff;
+    text-align: center;
+    position: relative;
+  }
+  .poverty-card.highlight { border-color: var(--accent); border-width: 2px; }
+  .poverty-card .badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+  .poverty-card .state-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 6px;
+  }
+  .poverty-card .pct {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .poverty-card .pct-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+  }
+
+  .racial-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 28px 0;
+  }
+  .racial-card {
+    border: 1px solid var(--rule);
+    padding: 20px;
+    background: #fff;
+  }
+  .racial-card .rcard-state {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .racial-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .racial-row .rlabel {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--ink-mid);
+  }
+  .racial-row .rval {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .racial-row .rval.minority { color: var(--accent); }
+  .racial-row .rval.white { color: var(--blue); }
+  .racial-bar {
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    margin-top: 4px;
+    overflow: hidden;
+  }
+  .racial-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+  }
+  .racial-bar-fill.minority { background: var(--accent); }
+  .racial-bar-fill.white { background: var(--blue); }
+  .racial-multiplier {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--ink-light);
+    text-align: center;
+    padding: 10px 0 0;
+    border-top: 1px dashed var(--rule);
+    margin-top: 10px;
+  }
+  .racial-multiplier strong { color: var(--accent); font-family: 'Playfair Display', serif; font-size: 14px; }
+
+  .conclusion {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 48px 32px;
+    margin: 48px -24px 0;
+  }
+  .conclusion h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .conclusion p {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    color: #ccc;
+    line-height: 1.75;
+    max-width: 640px;
+  }
+
+  .map-toggle {
+    display: flex;
+    gap: 0;
+    padding: 16px 20px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .map-toggle button {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    background: var(--paper);
+    color: var(--ink-light);
+    transition: all 0.15s;
+  }
+  .map-toggle button:first-child { border-right: none; }
+  .map-toggle button.active {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+  .ranked-list {
+    display: none;
+    padding: 12px 0;
+    max-height: 420px;
+    overflow-y: auto;
+  }
+  .ranked-list.visible { display: block; }
+  .ranked-list-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink-mid);
+    border-bottom: 1px solid var(--paper-dark);
+  }
+  .ranked-list-row:last-child { border-bottom: none; }
+  .ranked-list-row.user-state {
+    background: var(--accent-light);
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .ranked-list-row .rank-num {
+    width: 28px;
+    text-align: right;
+    color: var(--ink-light);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .ranked-list-row.user-state .rank-num { color: var(--accent); }
+  .ranked-list-row .rank-name { flex: 1; }
+  .ranked-list-row .rank-bar-wrap {
+    width: 120px;
+    height: 8px;
+    background: var(--paper-dark);
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .ranked-list-row .rank-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: var(--blue);
+  }
+  .ranked-list-row.user-state .rank-bar-fill { background: var(--accent); }
+  .ranked-list-row .rank-val {
+    width: 52px;
+    text-align: right;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .source-note {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--ink-light);
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    margin-top: 32px;
+    line-height: 1.6;
+  }
+
+  .flag-top {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-dark);
+  }
+  .flag-top-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--ink-light);
+    letter-spacing: 0.5px;
+  }
+
+  .no-data-note {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink-light);
+    font-style: italic;
+    text-align: center;
+    padding: 12px;
+    background: var(--paper-dark);
+    border: 1px solid var(--rule);
+  }
+
+  @media (max-width: 600px) {
+    .stat-trio { grid-template-columns: 1fr; }
+    .poverty-grid { grid-template-columns: 1fr; }
+    .racial-grid { grid-template-columns: 1fr; }
+    .state-metrics { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-label">Data Journalism</div>
+</div>
+
+<div class="flag-top">
+  <span class="flag-top-text">COVID-19 Mortality Report · Ages 18–34 · CDC WONDER Data 2018–2024</span>
+</div>
+
+<div class="hero">
+  <div class="hero-kicker">Special Report</div>
+  <h1>The Young Who Didn't Make It</h1>
+  <p class="hero-deck">They said COVID-19 would spare the young, but for thousands of Americans between 18 and 34, it never did.</p>
+  <div class="hero-byline">By <strong>Jeremy Guerin</strong> &nbsp;·&nbsp; Based on CDC National Vital Statistics System data &nbsp;·&nbsp; Published May 8, 2026</div>
+</div>
+
+<div class="article-wrap">
+
+  <div class="lede">
+    <p class="drop-cap">In January 2020, as the COVID-19 Pandemic kicked off, public health officials focused their efforts on protecting the elderly. The public was assured that young adults (18–34) faced little risk of death. And for the most part, this was true, as the elderly constituted the vast majority of COVID-19-related deaths.</p>
+  </div>
+
+  <p>But although death rates were low, more than <strong>12,600 young adults</strong> died from COVID-19 in the United States between 2019 and 2024 according to CDC records, and in some areas of the country, this rate was alarmingly higher than others. Families lost children, siblings, partners, and parents in spite of the public messaging suggesting that these people would survive.</p>
+
+  <p>Deaths from COVID-19 among young adults were disproportionately overrepresented in states with high poverty rates, poor health infrastructure, and larger populations of racial minorities. Despite COVID-19 only killing young adults at a crude rate of roughly 2.0 per 100,000 people nationwide, two states, New Mexico and Mississippi, faced a rate nearly triple the national average.</p>
+
+  <div class="stat-trio">
+    <div class="stat-box">
+      <div class="stat-num">12,600+</div>
+      <div class="stat-label">Young adults (18–34) who died from COVID-19</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">~2.0</div>
+      <div class="stat-label">National crude death rate per 100,000</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">50</div>
+      <div class="stat-label">States + D.C. with recorded deaths</div>
+    </div>
+  </div>
+
+  <div class="section-header">Where You Live Matters</div>
+
+  <p>The state a person lives in shapes access to healthcare and economic opportunity, and proved a key factor in who lived and who died during the COVID-19 Pandemic. To understand how COVID-19 affected young adults in your community, select your state below.</p>
+
+</div><!-- end article-wrap -->
+
+<!-- STATE SELECTOR FULL WIDTH -->
+<div class="state-selector-section" style="padding-left: 24px; padding-right: 24px;">
+  <h2>Your State, Your Story</h2>
+  <p>Select your state to see how COVID-19 affected young adults in your community</p>
+  <p style="font-family: 'DM Sans', sans-serif; font-size: 12px; color: #777; margin-bottom: 16px; font-style: italic;">Note: Statistics for Vermont are suppressed and unavailable due to CDC confidentiality constraints.</p>
+  <div class="state-select-wrap">
+    <label for="stateSelect">Select state</label>
+    <select id="stateSelect">
+      <option value="">— Choose a state —</option>
+    </select>
+  </div>
+
+  <div class="state-result" id="stateResult">
+    <div class="state-result-card">
+      <div class="state-result-name" id="resStateName"></div>
+      <div class="state-result-sub">COVID-19 Deaths · Ages 18–34 · 2018–2024</div>
+      <div class="state-metrics">
+        <div class="state-metric">
+          <div class="state-metric-val" id="resDeaths">—</div>
+          <div class="state-metric-label">Total deaths recorded</div>
+        </div>
+        <div class="state-metric">
+          <div class="state-metric-val" id="resRate">—</div>
+          <div class="state-metric-label">Deaths per 100,000 young adults</div>
+        </div>
+        <div class="state-metric">
+          <div class="state-metric-val" id="resPop">—</div>
+          <div class="state-metric-label">Young adults (18–34) in state</div>
+        </div>
+        <div class="state-metric">
+          <div class="state-metric-val" id="resNational">~2.0</div>
+          <div class="state-metric-label">National average rate per 100,000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN ARTICLE BODY (hidden until state selected) -->
+<div class="article-body" id="articleBody">
+<div class="article-wrap">
+
+  <div class="section-header">The Epicenter: New Mexico</div>
+
+  <p>No other state saw a higher rate of young adult deaths from COVID-19 than New Mexico. New Mexico faced a crude death rate of <strong>6.2 per 100,000</strong> young adults, more than three times the national average, setting itself apart from every other state in the country. Among a young adult population of just over 3.3 million, a total of 208 young adults between 18 and 34 died from COVID-19 there.</p>
+
+  <p>The scale of death New Mexico saw becomes clearest when visualized against other states. The map below shows COVID-19 death rates per 100,000 young adults across all 50 states, with darker shades indicating higher mortality.</p>
+
+  <div class="map-block">
+    <div class="chart-header">
+      <div class="chart-title">COVID-19 Death Rate Among Young Adults (18–34) by State</div>
+      <div class="chart-sub">Crude rate per 100,000 · Deaths 2018–2024 · Source: CDC WONDER</div>
+    </div>
+    <div class="map-toggle">
+      <button id="toggleMap" class="active" onclick="setMapView('map')">&#x1F5FA; Map</button>
+      <button id="toggleList" onclick="setMapView('list')">&#x2261; Ranked List</button>
+      <button id="toggleChart" onclick="setMapView('chart')">&#x1F4CA; Chart</button>
+    </div>
+    <div id="choroplethWrap">
+      <div id="choropleth" style="width:100%"></div>
+      <div class="legend-row" id="mapLegend"></div>
+    </div>
+    <div id="rankedList" class="ranked-list"></div>
+    <div id="allStatesChartWrap" style="display:none; overflow-y:auto; max-height:520px; padding: 8px 16px;">
+      <canvas id="allStatesChart"></canvas>
+    </div>
+  </div>
+
+  <div class="comparison-banner" id="nmComparison">
+    <div class="label">Your State vs. New Mexico</div>
+    <div class="text" id="nmCompText"></div>
+  </div>
+
+  <div class="section-header">Second in Sorrow: Mississippi</div>
+
+  <p>Mississippi ranked second in terms of young adult deaths from COVID-19 in the United States. With a crude rate of <strong>5.0 per 100,000</strong> and 232 total deaths, a rate more than twice the national average, and representative of a profound failure of the state's healthcare system in one of America's most impoverished states.</p>
+
+  <p>New Mexico and Mississippi were not mere anomalies, but a result of decades of underinvestment in healthcare, high poverty rates, and a history of racial discrimination that left young people of color particularly vulnerable.</p>
+
+  <div class="comparison-banner" id="msComparison">
+    <div class="label">Your State vs. Mississippi</div>
+    <div class="text" id="msCompText"></div>
+  </div>
+
+  <div class="chart-block">
+    <div class="chart-header">
+      <div class="chart-title">Death Rate Comparison: Your State, New Mexico, and Mississippi</div>
+      <div class="chart-sub">COVID-19 deaths per 100,000 young adults (18–34)</div>
+    </div>
+    <div class="chart-body">
+      <div style="position: relative; height: 240px;">
+        <canvas id="compareChart" role="img" aria-label="Bar chart comparing COVID-19 death rates between the user's selected state, New Mexico, and Mississippi.">Comparison of rates for selected state, New Mexico (6.2), and Mississippi (5.0).</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">The Poverty Trap</div>
+
+  <p>In impoverished communities, young adults were particularly vulnerable to COVID-19. Poverty correlates with poor health outcomes, with impoverished Americans having faced limited access to preventive care, higher rates of underlying conditions, overcrowded living situations, and jobs that failed to offer remote work or sick leave during the COVID-19 Pandemic.</p>
+
+  <p>New Mexico and Mississippi are two of the poorest states in the nation by family poverty rate, with Mississippi leading all 50 states at a rate of <strong>14.3%</strong> of families living below the poverty line. New Mexico, ranking 49th nationally, trails just behind at <strong>13.7%</strong>. The national average across all 50 states is 8.7%.</p>
+
+  <div class="comparison-banner" id="povertyComparison">
+    <div class="label">Your State's Poverty Rate vs. New Mexico &amp; Mississippi</div>
+    <div class="text" id="povertyCompText"></div>
+  </div>
+
+  <div class="chart-block">
+    <div class="chart-header">
+      <div class="chart-title">Family Poverty Rate: Your State vs. New Mexico and Mississippi</div>
+      <div class="chart-sub">Families below poverty line · 2019–2023 average · Source: NIMHD / Census ACS</div>
+    </div>
+    <div class="chart-body">
+      <div style="position: relative; height: 200px;">
+        <canvas id="povertyChart" role="img" aria-label="Bar chart comparing poverty rates across selected state, New Mexico, and Mississippi.">Poverty comparison chart</canvas>
+      </div>
+    </div>
+  </div>
+
+  <p>As a result of Mississippi and New Mexico's poverty rates, COVID-19 ravaged not just the old but even the young. Fewer hospital beds, longer distances to hospitals in rural communities, and higher rates of the underlying conditions such as diabetes, hypertension, and obesity due to lesser access to healthy foods, made many young adults vulnerable to complications from COVID-19.</p>
+
+  <div class="section-header">Race, Risk, and a Preventable Toll</div>
+
+  <p>But perhaps the most concerning aspect of young adult deaths from COVID-19 was not just how they were disproportionately represented among the poor, but how they were disproportionately represented among racial minorities. Racial minorities — a category encompassing American Indian or Alaska Native, Asian, Black or African American, Native Hawaiian or Other Pacific Islander, and multiracial individuals — died from COVID-19 at significantly higher rates than their white counterparts in almost every state.</p>
+
+  <p>On a national level, non-white young adults died at a crude rate of <strong>2.9 per 100,000</strong>, compared to <strong>2.2 per 100,000</strong> for white young adults. But the racial gap grew dramatically in states with the highest overall deaths. New Mexico saw a minority death rate among young adults reach a staggering <strong>12.9 per 100,000</strong> — more than three times the white rate of 4.3. The majority of these deaths consisted of Native Americans, America's most impoverished ethnic group. Mississippi didn't fare much better at 6.8 per 100,000, with most of these deaths consisting of Black people, compared to 3.4 for white young adults.</p>
+
+  <p>Systemic racism in healthcare made the COVID-19 Pandemic much more dangerous for minority communities in New Mexico and Mississippi. Racial minorities in the United States are often residentially segregated in areas with less access to healthcare and are overrepresented in front-line roles considered essential with little opportunity to socially distance. Consequently, the Pandemic was yet another chapter in America's history of discrimination.</p>
+
+  <div class="comparison-banner" id="racialComparison">
+    <div class="label">Racial Disparity in Your State vs. New Mexico &amp; Mississippi</div>
+    <div class="text" id="racialCompText"></div>
+  </div>
+
+  <div class="chart-block">
+    <div class="chart-header">
+      <div class="chart-title">Minority vs. White COVID-19 Death Rates, Young Adults (18–34)</div>
+      <div class="chart-sub">Deaths per 100,000 · Your state, New Mexico, and Mississippi · Source: CDC WONDER</div>
+    </div>
+    <div class="chart-body">
+      <div style="position: relative; height: 260px;">
+        <canvas id="racialChart" role="img" aria-label="Grouped bar chart comparing COVID-19 death rates between minority and white young adults in the selected state, New Mexico, and Mississippi.">Racial disparity comparison chart</canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-block">
+    <div class="chart-header">
+      <div class="chart-title">Racial Disparity in COVID-19 Deaths Among Young Adults, by State</div>
+      <div class="chart-sub">Minority-to-white death rate ratio · Higher = greater disparity · Source: CDC WONDER</div>
+    </div>
+    <div class="map-toggle">
+      <button id="toggleRacialMap" class="active" onclick="setRacialMapView('map')">&#x1F5FA; Map</button>
+      <button id="toggleRacialList" onclick="setRacialMapView('list')">&#x2261; Ranked List</button>
+    </div>
+    <div id="racialChoroplethWrap">
+      <div id="racialChoropleth" style="width:100%"></div>
+      <div class="legend-row" id="racialMapLegend"></div>
+    </div>
+    <div id="racialRankedList" class="ranked-list"></div>
+  </div>
+
+  <p>The disparities within your own state tell a local story of this wider nationwide saga. Whether or not your state's minority-to-white death ratio mirrors the national rate or exceeds it, the loss of life that occurred as a result of this disparity could have been easily mended with more equitable access to healthcare and housing, and better working conditions.</p>
+
+</div><!-- end article-wrap for body -->
+
+<div class="article-wrap">
+  <div class="conclusion" style="margin-left: -24px; margin-right: -24px;">
+    <h2>A Failure We Must Not Repeat</h2>
+    <p>The story of COVID-19 deaths among young adults in the United States is a story of two pandemics happening simultaneously; among America's middle and upper class, it was a story of social distancing, school shutdowns, and remote work. But for impoverished and minority communities in states like New Mexico and Mississippi, many of the opportunities to practice social distancing were absent, and health inequality allowed the virus to target even the young despite popular health authorities insisting they would be spared. Should America allow this injustice to continue, more young adults in these communities will perish in the next pandemic.</p>
+  </div>
+
+  <div class="source-note">
+    <strong>Data sources:</strong> COVID-19 mortality data from CDC WONDER National Vital Statistics System, Underlying Cause of Death 2018–2024 (ICD-10 code U07.1), queried April 28, 2026. Deaths among individuals aged 18–34. Poverty data from HDPulse / National Institute on Minority Health and Health Disparities, sourced from U.S. Census Bureau American Community Survey 2019–2023. Rates are crude rates per 100,000 population. Suppressed counts (fewer than 10 deaths) are not displayed per CDC confidentiality constraints.<br><br>
+    <strong>Datasets:</strong> All datasets used in this project are publicly available at <a href="https://github.com/jereguerin/INST462-Project-3.git" target="_blank" rel="noopener noreferrer" style="color: var(--accent); text-decoration: underline;">github.com/jereguerin/INST462-Project-3</a>.
+  </div>
+</div>
+</div><!-- end article-body -->
+
+<script>
+const statsData = {
+  "Alabama": { deaths: 280, pop: 7851442, rate: 3.6 },
+  "Alaska": { deaths: 35, pop: 1279147, rate: 2.7 },
+  "Arizona": { deaths: 515, pop: 12045013, rate: 4.3 },
+  "Arkansas": { deaths: 150, pop: 4769282, rate: 3.1 },
+  "California": { deaths: 1495, pop: 66558934, rate: 2.2 },
+  "Colorado": { deaths: 142, pop: 10173269, rate: 1.4 },
+  "Connecticut": { deaths: 79, pop: 5566224, rate: 1.4 },
+  "Delaware": { deaths: 32, pop: 1499160, rate: 2.1 },
+  "District of Columbia": { deaths: 20, pop: 1573632, rate: 1.3 },
+  "Florida": { deaths: 950, pop: 32296943, rate: 2.9 },
+  "Georgia": { deaths: 547, pop: 17793173, rate: 3.1 },
+  "Hawaii": { deaths: 32, pop: 2184350, rate: 1.5 },
+  "Idaho": { deaths: 43, pop: 2982257, rate: 1.4 },
+  "Illinois": { deaths: 393, pop: 20204148, rate: 1.9 },
+  "Indiana": { deaths: 207, pop: 10914026, rate: 1.9 },
+  "Iowa": { deaths: 64, pop: 5037253, rate: 1.3 },
+  "Kansas": { deaths: 109, pop: 4751435, rate: 2.3 },
+  "Kentucky": { deaths: 181, pop: 7051223, rate: 2.6 },
+  "Louisiana": { deaths: 259, pop: 7353010, rate: 3.5 },
+  "Maine": { deaths: 18, pop: 1921504, rate: 0.9 },
+  "Maryland": { deaths: 191, pop: 9425622, rate: 2.0 },
+  "Massachusetts": { deaths: 124, pop: 11761178, rate: 1.1 },
+  "Michigan": { deaths: 363, pop: 15803184, rate: 2.3 },
+  "Minnesota": { deaths: 112, pop: 8789957, rate: 1.3 },
+  "Mississippi": { deaths: 232, pop: 4678933, rate: 5.0 },
+  "Missouri": { deaths: 192, pop: 9691719, rate: 2.0 },
+  "Montana": { deaths: 27, pop: 1706635, rate: 1.6 },
+  "Nebraska": { deaths: 56, pop: 3135861, rate: 1.8 },
+  "Nevada": { deaths: 156, pop: 4987617, rate: 3.1 },
+  "New Hampshire": { deaths: 20, pop: 2088193, rate: 1.0 },
+  "New Jersey": { deaths: 282, pop: 13675132, rate: 2.1 },
+  "New Mexico": { deaths: 208, pop: 3367585, rate: 6.2 },
+  "New York": { deaths: 640, pop: 32052143, rate: 2.0 },
+  "North Carolina": { deaths: 381, pop: 17120476, rate: 2.2 },
+  "North Dakota": { deaths: 19, pop: 1386192, rate: 1.4 },
+  "Ohio": { deaths: 365, pop: 18292898, rate: 2.0 },
+  "Oklahoma": { deaths: 221, pop: 6546987, rate: 3.4 },
+  "Oregon": { deaths: 70, pop: 6723742, rate: 1.0 },
+  "Pennsylvania": { deaths: 300, pop: 19949507, rate: 1.5 },
+  "Rhode Island": { deaths: 17, pop: 1820944, rate: 0.9 },
+  "South Carolina": { deaths: 221, pop: 8142882, rate: 2.7 },
+  "South Dakota": { deaths: 34, pop: 1395592, rate: 2.4 },
+  "Tennessee": { deaths: 305, pop: 11153704, rate: 2.7 },
+  "Texas": { deaths: 1816, pop: 50741116, rate: 3.6 },
+  "Utah": { deaths: 114, pop: 6131331, rate: 1.9 },
+  "Virginia": { deaths: 217, pop: 13926993, rate: 1.6 },
+  "Washington": { deaths: 140, pop: 12903216, rate: 1.1 },
+  "West Virginia": { deaths: 54, pop: 2587973, rate: 2.1 },
+  "Wisconsin": { deaths: 145, pop: 9059802, rate: 1.6 },
+  "Wyoming": { deaths: 27, pop: 894879, rate: 3.0 }
+};
+
+const minorityData = {
+  "Alabama": { deaths: 134, pop: 2762453, rate: 4.9 },
+  "Alaska": { deaths: 26, pop: 495501, rate: 5.2 },
+  "Arizona": { deaths: 207, pop: 2597149, rate: 8.0 },
+  "Arkansas": { deaths: 55, pop: 1179235, rate: 4.7 },
+  "California": { deaths: 345, pop: 19989168, rate: 1.7 },
+  "Colorado": { deaths: 27, pop: 1595928, rate: 1.7 },
+  "Connecticut": { deaths: 17, pop: 1432931, rate: 1.2 },
+  "Delaware": { deaths: 15, pop: 556663, rate: 2.7 },
+  "District of Columbia": { deaths: 13, pop: 727061, rate: 1.8 },
+  "Florida": { deaths: 356, pop: 9040093, rate: 3.9 },
+  "Georgia": { deaths: 291, pop: 7903673, rate: 3.7 },
+  "Hawaii": { deaths: 32, pop: 1578044, rate: 2.0 },
+  "Illinois": { deaths: 153, pop: 5454289, rate: 2.8 },
+  "Indiana": { deaths: 55, pop: 2083667, rate: 2.6 },
+  "Iowa": { deaths: 14, pop: 695032, rate: 2.0 },
+  "Kansas": { deaths: 19, pop: 836730, rate: 2.3 },
+  "Kentucky": { deaths: 34, pop: 1107042, rate: 3.1 },
+  "Louisiana": { deaths: 133, pop: 3074337, rate: 4.3 },
+  "Maryland": { deaths: 101, pop: 4265868, rate: 2.4 },
+  "Massachusetts": { deaths: 31, pop: 2858747, rate: 1.1 },
+  "Michigan": { deaths: 132, pop: 3976942, rate: 3.3 },
+  "Minnesota": { deaths: 44, pop: 1921686, rate: 2.3 },
+  "Mississippi": { deaths: 145, pop: 2133027, rate: 6.8 },
+  "Missouri": { deaths: 49, pop: 2008163, rate: 2.4 },
+  "Montana": { deaths: 10, pop: 240214, rate: 4.2 },
+  "Nevada": { deaths: 58, pop: 1502262, rate: 3.9 },
+  "New Jersey": { deaths: 103, pop: 4425201, rate: 2.3 },
+  "New Mexico": { deaths: 94, pop: 728413, rate: 12.9 },
+  "New York": { deaths: 261, pop: 10887921, rate: 2.4 },
+  "North Carolina": { deaths: 159, pop: 5687323, rate: 2.8 },
+  "Ohio": { deaths: 97, pop: 4098247, rate: 2.4 },
+  "Oklahoma": { deaths: 84, pop: 2023278, rate: 4.2 },
+  "Oregon": { deaths: 14, pop: 1174806, rate: 1.2 },
+  "Pennsylvania": { deaths: 75, pop: 4644111, rate: 1.6 },
+  "South Carolina": { deaths: 94, pop: 2854245, rate: 3.3 },
+  "South Dakota": { deaths: 16, pop: 276146, rate: 5.8 },
+  "Tennessee": { deaths: 125, pop: 2785161, rate: 4.5 },
+  "Texas": { deaths: 320, pop: 12160839, rate: 2.6 },
+  "Utah": { deaths: 23, pop: 719817, rate: 3.2 },
+  "Virginia": { deaths: 96, pop: 4750989, rate: 2.0 },
+  "Washington": { deaths: 44, pop: 3510028, rate: 1.3 },
+  "Wisconsin": { deaths: 53, pop: 1584386, rate: 3.3 }
+};
+
+const whiteData = {
+  "Alabama": { deaths: 146, pop: 5088989, rate: 2.9 },
+  "Arizona": { deaths: 308, pop: 9447864, rate: 3.3 },
+  "Arkansas": { deaths: 95, pop: 3590047, rate: 2.6 },
+  "California": { deaths: 1150, pop: 46569766, rate: 2.5 },
+  "Colorado": { deaths: 115, pop: 8577341, rate: 1.3 },
+  "Connecticut": { deaths: 62, pop: 4133293, rate: 1.5 },
+  "Delaware": { deaths: 17, pop: 942497, rate: 1.8 },
+  "Florida": { deaths: 594, pop: 23256850, rate: 2.6 },
+  "Georgia": { deaths: 256, pop: 9889500, rate: 2.6 },
+  "Idaho": { deaths: 40, pop: 2711367, rate: 1.5 },
+  "Illinois": { deaths: 240, pop: 14749859, rate: 1.6 },
+  "Indiana": { deaths: 152, pop: 8830359, rate: 1.7 },
+  "Iowa": { deaths: 50, pop: 4342221, rate: 1.2 },
+  "Kansas": { deaths: 90, pop: 3914705, rate: 2.3 },
+  "Kentucky": { deaths: 147, pop: 5944181, rate: 2.5 },
+  "Louisiana": { deaths: 126, pop: 4278673, rate: 2.9 },
+  "Maine": { deaths: 17, pop: 1761823, rate: 1.0 },
+  "Maryland": { deaths: 90, pop: 5159754, rate: 1.7 },
+  "Massachusetts": { deaths: 93, pop: 8902431, rate: 1.0 },
+  "Michigan": { deaths: 231, pop: 11826242, rate: 2.0 },
+  "Minnesota": { deaths: 68, pop: 6868271, rate: 1.0 },
+  "Mississippi": { deaths: 87, pop: 2545906, rate: 3.4 },
+  "Missouri": { deaths: 143, pop: 7683556, rate: 1.9 },
+  "Montana": { deaths: 17, pop: 1466421, rate: 1.2 },
+  "Nebraska": { deaths: 47, pop: 2655822, rate: 1.8 },
+  "Nevada": { deaths: 98, pop: 3485355, rate: 2.8 },
+  "New Hampshire": { deaths: 16, pop: 1886025, rate: 0.8 },
+  "New Jersey": { deaths: 179, pop: 9249931, rate: 1.9 },
+  "New Mexico": { deaths: 114, pop: 2639172, rate: 4.3 },
+  "New York": { deaths: 379, pop: 21164222, rate: 1.8 },
+  "North Carolina": { deaths: 222, pop: 11433153, rate: 1.9 },
+  "North Dakota": { deaths: 12, pop: 1158220, rate: 1.0 },
+  "Ohio": { deaths: 268, pop: 14194651, rate: 1.9 },
+  "Oklahoma": { deaths: 137, pop: 4523709, rate: 3.0 },
+  "Oregon": { deaths: 56, pop: 5548936, rate: 1.0 },
+  "Pennsylvania": { deaths: 225, pop: 15305396, rate: 1.5 },
+  "Rhode Island": { deaths: 11, pop: 1436983, rate: 0.8 },
+  "South Carolina": { deaths: 127, pop: 5288637, rate: 2.4 },
+  "South Dakota": { deaths: 18, pop: 1119446, rate: 1.6 },
+  "Tennessee": { deaths: 180, pop: 8368543, rate: 2.2 },
+  "Texas": { deaths: 1496, pop: 38580277, rate: 3.9 },
+  "Utah": { deaths: 91, pop: 5411514, rate: 1.7 },
+  "Virginia": { deaths: 121, pop: 9176004, rate: 1.3 },
+  "Washington": { deaths: 96, pop: 9393188, rate: 1.0 },
+  "West Virginia": { deaths: 48, pop: 2354313, rate: 2.0 },
+  "Wisconsin": { deaths: 92, pop: 7475416, rate: 1.2 },
+  "Wyoming": { deaths: 19, pop: 807003, rate: 2.4 }
+};
+
+const povertyData = {
+  "Alabama": { pct: 11.3, rank: 45 },
+  "Alaska": { pct: 6.8, rank: 13 },
+  "Arizona": { pct: 8.9, rank: 33 },
+  "Arkansas": { pct: 11.5, rank: 46 },
+  "California": { pct: 8.4, rank: 29 },
+  "Colorado": { pct: 5.9, rank: 5 },
+  "Connecticut": { pct: 6.8, rank: 13 },
+  "Delaware": { pct: 7.3, rank: 23 },
+  "District of Columbia": { pct: 10.7, rank: 43 },
+  "Florida": { pct: 8.9, rank: 33 },
+  "Georgia": { pct: 9.9, rank: 39 },
+  "Hawaii": { pct: 6.9, rank: 16 },
+  "Idaho": { pct: 7.0, rank: 18 },
+  "Illinois": { pct: 8.2, rank: 28 },
+  "Indiana": { pct: 8.4, rank: 29 },
+  "Iowa": { pct: 6.9, rank: 16 },
+  "Kansas": { pct: 7.7, rank: 26 },
+  "Kentucky": { pct: 11.8, rank: 47 },
+  "Louisiana": { pct: 14.2, rank: 50 },
+  "Maine": { pct: 6.5, rank: 9 },
+  "Maryland": { pct: 6.3, rank: 7 },
+  "Massachusetts": { pct: 6.6, rank: 10 },
+  "Michigan": { pct: 8.8, rank: 32 },
+  "Minnesota": { pct: 5.5, rank: 2 },
+  "Mississippi": { pct: 14.3, rank: 51 },
+  "Missouri": { pct: 8.4, rank: 29 },
+  "Montana": { pct: 7.1, rank: 21 },
+  "Nebraska": { pct: 6.7, rank: 12 },
+  "Nevada": { pct: 9.0, rank: 35 },
+  "New Hampshire": { pct: 4.4, rank: 1 },
+  "New Jersey": { pct: 7.0, rank: 18 },
+  "New Mexico": { pct: 13.7, rank: 49 },
+  "New York": { pct: 9.8, rank: 38 },
+  "North Carolina": { pct: 9.4, rank: 37 },
+  "North Dakota": { pct: 6.2, rank: 6 },
+  "Ohio": { pct: 9.2, rank: 36 },
+  "Oklahoma": { pct: 11.1, rank: 44 },
+  "Oregon": { pct: 7.3, rank: 23 },
+  "Pennsylvania": { pct: 8.1, rank: 27 },
+  "Rhode Island": { pct: 7.0, rank: 18 },
+  "South Carolina": { pct: 10.1, rank: 41 },
+  "South Dakota": { pct: 7.4, rank: 25 },
+  "Tennessee": { pct: 9.9, rank: 39 },
+  "Texas": { pct: 10.5, rank: 42 },
+  "Utah": { pct: 5.7, rank: 3 },
+  "Virginia": { pct: 6.8, rank: 13 },
+  "Washington": { pct: 6.4, rank: 8 },
+  "West Virginia": { pct: 11.9, rank: 48 },
+  "Wisconsin": { pct: 6.6, rank: 10 },
+  "Wyoming": { pct: 7.1, rank: 21 }
+};
+
+let compareChartInst = null;
+let povertyChartInst = null;
+let racialChartInst = null;
+
+const sel = document.getElementById('stateSelect');
+const states = Object.keys(statsData).sort();
+states.forEach(s => {
+  const opt = document.createElement('option');
+  opt.value = s;
+  opt.textContent = s;
+  sel.appendChild(opt);
+});
+
+function fmt(n) { return n ? n.toLocaleString() : 'N/A'; }
+function fmtPop(n) {
+  if (!n) return 'N/A';
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(0) + 'K';
+  return n.toLocaleString();
+}
+
+sel.addEventListener('change', function() {
+  const state = this.value;
+  if (!state) return;
+  const sd = statsData[state];
+
+  document.getElementById('resStateName').textContent = state;
+  document.getElementById('resDeaths').textContent = sd ? fmt(sd.deaths) : 'Suppressed';
+  document.getElementById('resRate').textContent = sd ? sd.rate.toFixed(1) : 'N/A';
+  document.getElementById('resPop').textContent = sd ? fmtPop(sd.pop) : 'N/A';
+
+  document.getElementById('stateResult').classList.add('visible');
+
+  setTimeout(() => {
+    document.getElementById('articleBody').classList.add('visible');
+    updateDynamicContent(state);
+  }, 300);
+});
+
+function updateDynamicContent(state) {
+  const sd = statsData[state] || {};
+  const md = minorityData[state];
+  const wd = whiteData[state];
+  const pd = povertyData[state];
+  const nmRate = 6.2, msRate = 5.0, natAvg = 2.0;
+  const userRate = sd.rate || null;
+
+  // NM comparison
+  const nmEl = document.getElementById('nmCompText');
+  if (state === 'New Mexico') {
+    nmEl.innerHTML = `<strong>New Mexico IS the epicenter.</strong> With a rate of 6.2 per 100,000, New Mexico led the nation in COVID-19 deaths among young adults — more than three times the national average.`;
+  } else if (userRate) {
+    const ratio = (nmRate / userRate).toFixed(1);
+    const higher = userRate < nmRate;
+    if (higher) {
+      nmEl.innerHTML = `Young adults in <strong>${state}</strong> died from COVID-19 at a rate of <strong>${userRate.toFixed(1)} per 100,000</strong> — compared to New Mexico's <strong>6.2</strong>. New Mexico's death rate was <strong>${ratio}×</strong> higher than your state's, meaning the pandemic's toll on young adults there was dramatically more severe.`;
+    } else {
+      nmEl.innerHTML = `Young adults in <strong>${state}</strong> died at a rate of <strong>${userRate.toFixed(1)} per 100,000</strong>. This is higher than New Mexico's rate of 6.2 — but the data in your state is measured against a much larger population base.`;
+    }
+  }
+
+  // MS comparison
+  const msEl = document.getElementById('msCompText');
+  if (state === 'Mississippi') {
+    msEl.innerHTML = `<strong>Mississippi ranks second nationally.</strong> With 232 deaths and a rate of 5.0 per 100,000 young adults, Mississippi's young adults faced extraordinary risk — more than twice the national average.`;
+  } else if (userRate) {
+    const ratio = (msRate / userRate).toFixed(1);
+    const pctDiff = Math.abs(((userRate - msRate) / msRate) * 100).toFixed(0);
+    if (userRate < msRate) {
+      msEl.innerHTML = `In <strong>${state}</strong>, the COVID-19 death rate among young adults was <strong>${userRate.toFixed(1)} per 100,000</strong>. Mississippi's rate of <strong>5.0</strong> was <strong>${ratio}×</strong> your state's rate — <strong>${pctDiff}% higher</strong> than where you live.`;
+    } else {
+      msEl.innerHTML = `Young adults in <strong>${state}</strong> actually experienced a rate of <strong>${userRate.toFixed(1)} per 100,000</strong> — above Mississippi's 5.0. Both states reflect a deeply troubling toll on young lives.`;
+    }
+  }
+
+  // Comparison chart
+  if (compareChartInst) compareChartInst.destroy();
+  const compareLabels = [state === 'New Mexico' ? 'New Mexico ★' : state, 'New Mexico', 'Mississippi'];
+  const compareVals = [userRate || 0, 6.2, 5.0];
+  const compareColors = ['#1e3a5f', '#9b1c1c', '#9b1c1c'];
+  compareChartInst = new Chart(document.getElementById('compareChart'), {
+    type: 'bar',
+    data: {
+      labels: compareLabels,
+      datasets: [{
+        label: 'Deaths per 100,000',
+        data: compareVals,
+        backgroundColor: compareColors,
+        borderWidth: 0,
+        borderRadius: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.parsed.y.toFixed(1)} per 100,000`
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 8,
+          ticks: {
+            font: { family: 'DM Sans', size: 11 },
+            callback: v => v.toFixed(1)
+          },
+          grid: { color: '#f0ece3' }
+        },
+        x: {
+          ticks: { font: { family: 'DM Sans', size: 12 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+
+  // Poverty comparison banner
+  const povEl = document.getElementById('povertyCompText');
+  const nmPov = 13.7, msPov = 14.3, natPov = 8.7;
+  if (pd) {
+    const userPov = pd.pct;
+    const userRank = pd.rank;
+    let cmp = '';
+    if (userPov < natPov) {
+      cmp = `below the national average of <strong>${natPov}%</strong>`;
+    } else if (userPov > msPov) {
+      cmp = `above both New Mexico and Mississippi`;
+    } else {
+      cmp = `above the national average of <strong>${natPov}%</strong>`;
+    }
+    povEl.innerHTML = `<strong>${state}</strong> has a family poverty rate of <strong>${userPov.toFixed(1)}%</strong> — ${cmp}. By comparison, New Mexico's rate is <strong>${nmPov}%</strong> (49th nationally) and Mississippi's is <strong>${msPov}%</strong> — the highest in the nation. Poverty in these two states was a significant driver of young adult COVID-19 mortality.`;
+  } else {
+    povEl.innerHTML = `Family poverty data is unavailable for <strong>${state}</strong>. For reference, New Mexico's rate is <strong>${nmPov}%</strong> (49th nationally) and Mississippi's is <strong>${msPov}%</strong> — the highest in the nation.`;
+  }
+
+  // Poverty chart
+  const userPov = pd ? pd.pct : null;
+  if (povertyChartInst) povertyChartInst.destroy();
+  povertyChartInst = new Chart(document.getElementById('povertyChart'), {
+    type: 'bar',
+    data: {
+      labels: [state, 'New Mexico', 'Mississippi', 'National Avg'],
+      datasets: [{
+        label: '% Families Below Poverty',
+        data: [userPov || 0, 13.7, 14.3, 8.7],
+        backgroundColor: ['#1e3a5f', '#9b1c1c', '#9b1c1c', '#888'],
+        borderWidth: 0,
+        borderRadius: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y.toFixed(1)}% of families` } }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 18,
+          ticks: {
+            font: { family: 'DM Sans', size: 11 },
+            callback: v => v + '%'
+          },
+          grid: { color: '#f0ece3' }
+        },
+        x: {
+          ticks: { font: { family: 'DM Sans', size: 12 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+
+  // Racial comparison banner
+  const racialEl = document.getElementById('racialCompText');
+  const minRate = md ? md.rate : null;
+  const wRate = wd ? wd.rate : null;
+  const mult = (minRate && wRate) ? (minRate / wRate).toFixed(1) : null;
+  if (minRate && wRate) {
+    let dispText = '';
+    const nmMult = (12.9 / 4.3).toFixed(1);
+    const msMult = (6.8 / 3.4).toFixed(1);
+    if (parseFloat(mult) > parseFloat(nmMult)) {
+      dispText = `a higher disparity ratio than even New Mexico`;
+    } else if (parseFloat(mult) > parseFloat(msMult)) {
+      dispText = `a disparity ratio between New Mexico and Mississippi`;
+    } else if (parseFloat(mult) >= 1.3) {
+      dispText = `a notable but lower gap than New Mexico or Mississippi`;
+    } else {
+      dispText = `a relatively narrow gap compared to New Mexico and Mississippi`;
+    }
+    racialEl.innerHTML = `In <strong>${state}</strong>, minority young adults died from COVID-19 at <strong>${minRate.toFixed(1)} per 100,000</strong> vs. <strong>${wRate.toFixed(1)}</strong> for white young adults — a ratio of <strong>${mult}×</strong>, ${dispText}. Compare this to New Mexico's ratio of <strong>${nmMult}×</strong> (12.9 vs. 4.3) and Mississippi's <strong>${msMult}×</strong> (6.8 vs. 3.4).`;
+  } else {
+    racialEl.innerHTML = `Racial breakdown data is unavailable for <strong>${state}</strong>. For context, New Mexico's minority-to-white death rate ratio was <strong>3.0×</strong> (12.9 vs. 4.3 per 100,000) and Mississippi's was <strong>2.0×</strong> (6.8 vs. 3.4).`;
+  }
+
+  // Racial chart
+  if (racialChartInst) racialChartInst.destroy();
+  racialChartInst = new Chart(document.getElementById('racialChart'), {
+    type: 'bar',
+    data: {
+      labels: [state, 'New Mexico', 'Mississippi'],
+      datasets: [
+        {
+          label: 'Minority rate',
+          data: [md ? md.rate : 0, 12.9, 6.8],
+          backgroundColor: '#9b1c1c',
+          borderWidth: 0,
+          borderRadius: 2
+        },
+        {
+          label: 'White rate',
+          data: [wd ? wd.rate : 0, 4.3, 3.4],
+          backgroundColor: '#1e3a5f',
+          borderWidth: 0,
+          borderRadius: 2
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} per 100,000` } }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { font: { family: 'DM Sans', size: 11 }, callback: v => v.toFixed(0) },
+          grid: { color: '#f0ece3' }
+        },
+        x: {
+          ticks: { font: { family: 'DM Sans', size: 12 } },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+// Map/List toggle
+let currentView = 'map';
+let currentUserState = null;
+
+function setMapView(view) {
+  currentView = view;
+  const choroplethWrap = document.getElementById('choroplethWrap');
+  const rankedList = document.getElementById('rankedList');
+  const allStatesWrap = document.getElementById('allStatesChartWrap');
+  const toggleMap = document.getElementById('toggleMap');
+  const toggleList = document.getElementById('toggleList');
+  const toggleChart = document.getElementById('toggleChart');
+  choroplethWrap.style.display = view === 'map' ? '' : 'none';
+  rankedList.classList.toggle('visible', view === 'list');
+  allStatesWrap.style.display = view === 'chart' ? '' : 'none';
+  toggleMap.classList.toggle('active', view === 'map');
+  toggleList.classList.toggle('active', view === 'list');
+  toggleChart.classList.toggle('active', view === 'chart');
+  if (view === 'list') renderRankedList(currentUserState);
+  if (view === 'chart') renderAllStatesChart(currentUserState);
+}
+
+let allStatesChartInst = null;
+function renderAllStatesChart(userState) {
+  const sorted = Object.entries(statsData)
+    .map(([name, d]) => ({ name, rate: d.rate }))
+    .sort((a, b) => b.rate - a.rate);
+  const barH = 22;
+  const canvas = document.getElementById('allStatesChart');
+  canvas.width = canvas.parentElement.offsetWidth - 32;
+  canvas.height = sorted.length * barH + 60;
+  const bgColors = sorted.map(s => {
+    if (s.name === 'New Mexico' || s.name === 'Mississippi') return '#9b1c1c';
+    if (s.name === userState) return '#c2410c';
+    return '#1e3a5f';
+  });
+  if (allStatesChartInst) allStatesChartInst.destroy();
+  allStatesChartInst = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels: sorted.map(s => s.name === userState ? s.name + ' ★' : s.name),
+      datasets: [{ data: sorted.map(s => s.rate), backgroundColor: bgColors, borderRadius: 2 }]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toFixed(1)} per 100,000` } }
+      },
+      scales: {
+        x: { beginAtZero: true, grid: { color: '#e5e7eb' }, ticks: { font: { family: 'DM Sans', size: 11 } }, title: { display: true, text: 'Deaths per 100,000', font: { family: 'DM Sans', size: 11 } } },
+        y: { ticks: { font: { family: 'DM Sans', size: 11 }, color: ctx => {
+          const lbl = ctx.tick.label.replace(' ★','');
+          if (lbl === 'New Mexico' || lbl === 'Mississippi') return '#9b1c1c';
+          if (lbl === userState) return '#c2410c';
+          return '#374151';
+        }}, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function renderRankedList(userState) {
+  const rankedList = document.getElementById('rankedList');
+  const allStates = Object.entries(statsData)
+    .map(([name, d]) => ({ name, rate: d.rate }))
+    .sort((a, b) => b.rate - a.rate);
+  rankedList.innerHTML = allStates.map((s, i) => {
+    const isUser = s.name === userState;
+    return `<div class="ranked-list-row${isUser ? ' user-state' : ''}">
+      <span class="rank-num">${i + 1}</span>
+      <span class="rank-name">${s.name}${isUser ? ' ★' : ''}</span>
+      <span class="rank-val">${s.rate.toFixed(1)}</span>
+    </div>`;
+  }).join('');
+}
+
+let currentRacialView = 'map';
+
+function setRacialMapView(view) {
+  currentRacialView = view;
+  const wrap = document.getElementById('racialChoroplethWrap');
+  const list = document.getElementById('racialRankedList');
+  const btnMap = document.getElementById('toggleRacialMap');
+  const btnList = document.getElementById('toggleRacialList');
+  if (view === 'map') {
+    wrap.style.display = '';
+    list.classList.remove('visible');
+    btnMap.classList.add('active');
+    btnList.classList.remove('active');
+  } else {
+    wrap.style.display = 'none';
+    list.classList.add('visible');
+    btnMap.classList.remove('active');
+    btnList.classList.add('active');
+    renderRacialRankedList(currentUserState);
+  }
+}
+
+function renderRacialRankedList(userState) {
+  const list = document.getElementById('racialRankedList');
+  const rows = Object.keys(minorityData)
+    .filter(s => whiteData[s] && whiteData[s].rate > 0)
+    .map(s => ({ name: s, ratio: parseFloat((minorityData[s].rate / whiteData[s].rate).toFixed(2)) }))
+    .sort((a, b) => b.ratio - a.ratio);
+  const maxRatio = rows[0].ratio;
+  list.innerHTML = rows.map((s, i) => {
+    const isUser = s.name === userState;
+    return `<div class="ranked-list-row${isUser ? ' user-state' : ''}">
+      <span class="rank-num">${i + 1}</span>
+      <span class="rank-name">${s.name}${isUser ? ' ★' : ''}</span>
+      <span class="rank-val">${s.ratio.toFixed(2)}×</span>
+    </div>`;
+  }).join('');
+}
+
+// Wire ranked list update on state change
+const origSelChange = sel.onchange;
+sel.addEventListener('change', function() {
+  currentUserState = this.value || null;
+  if (currentView === 'list') renderRankedList(currentUserState);
+  if (currentView === 'chart') renderAllStatesChart(currentUserState);
+  if (currentRacialView === 'list') renderRacialRankedList(currentUserState);
+});
+
+// Static DOMContentLoaded setup
+window.addEventListener('DOMContentLoaded', function() {
+
+  // D3 Choropleth
+  const rateByState = {};
+  Object.entries(statsData).forEach(([s, d]) => { rateByState[s] = d.rate; });
+
+  const colors = ['#fef3c7','#fcd34d','#f97316','#c2410c','#7c2d12'];
+  const thresholds = [0, 1.5, 2.5, 3.5, 5.0];
+
+  const mapDiv = document.getElementById('choropleth');
+  const W = mapDiv.offsetWidth || 760;
+  const H = Math.round(W * 0.6);
+
+  const svgEl = d3.select('#choropleth').append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('width', '100%');
+
+  const colorScale = d3.scaleThreshold()
+    .domain(thresholds.slice(1))
+    .range(colors);
+
+  const projection = d3.geoAlbersUsa().scale(W * 1.3).translate([W / 2, H / 2]);
+  const pathGen = d3.geoPath(projection);
+
+  const tooltip = d3.select('body').append('div')
+    .style('position', 'absolute')
+    .style('background', '#1a1a1a')
+    .style('color', '#fff')
+    .style('font-family', 'DM Sans, sans-serif')
+    .style('font-size', '12px')
+    .style('padding', '8px 12px')
+    .style('border-radius', '3px')
+    .style('pointer-events', 'none')
+    .style('opacity', 0)
+    .style('z-index', 9999);
+
+  d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us => {
+    const stateFeatures = topojson.feature(us, us.objects.states).features;
+    const stateNames = {};
+    Object.entries({
+      "01":"Alabama","02":"Alaska","04":"Arizona","05":"Arkansas","06":"California",
+      "08":"Colorado","09":"Connecticut","10":"Delaware","11":"District of Columbia",
+      "12":"Florida","13":"Georgia","15":"Hawaii","16":"Idaho","17":"Illinois",
+      "18":"Indiana","19":"Iowa","20":"Kansas","21":"Kentucky","22":"Louisiana",
+      "23":"Maine","24":"Maryland","25":"Massachusetts","26":"Michigan","27":"Minnesota",
+      "28":"Mississippi","29":"Missouri","30":"Montana","31":"Nebraska","32":"Nevada",
+      "33":"New Hampshire","34":"New Jersey","35":"New Mexico","36":"New York",
+      "37":"North Carolina","38":"North Dakota","39":"Ohio","40":"Oklahoma","41":"Oregon",
+      "42":"Pennsylvania","44":"Rhode Island","45":"South Carolina","46":"South Dakota",
+      "47":"Tennessee","48":"Texas","49":"Utah","50":"Vermont","51":"Virginia",
+      "53":"Washington","54":"West Virginia","55":"Wisconsin","56":"Wyoming"
+    }).forEach(([fips, name]) => stateNames[fips] = name);
+
+    svgEl.selectAll('path')
+      .data(stateFeatures)
+      .join('path')
+      .attr('d', pathGen)
+      .attr('fill', d => {
+        const fips = String(d.id).padStart(2, '0');
+        const name = stateNames[fips];
+        const rate = rateByState[name];
+        return rate != null ? colorScale(rate) : '#e5e7eb';
+      })
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 0.5)
+      .on('mousemove', function(event, d) {
+        const fips = String(d.id).padStart(2, '0');
+        const name = stateNames[fips] || 'Unknown';
+        const rate = rateByState[name];
+        tooltip
+          .style('opacity', 1)
+          .style('left', (event.pageX + 12) + 'px')
+          .style('top', (event.pageY - 28) + 'px')
+          .html(`<strong>${name}</strong><br>${rate != null ? rate.toFixed(1) + ' per 100,000' : 'Data suppressed'}`);
+      })
+      .on('mouseleave', () => tooltip.style('opacity', 0));
+
+    // Legend
+    const legendDiv = document.getElementById('mapLegend');
+    legendDiv.innerHTML = '<span style="margin-right:8px;color:#6b6b6b">Rate per 100K:</span>';
+    const lbls = ['< 1.5', '1.5–2.5', '2.5–3.5', '3.5–5.0', '5.0+'];
+    colors.forEach((c, i) => {
+      const item = document.createElement('span');
+      item.className = 'legend-item';
+      item.innerHTML = `<span class="legend-swatch" style="background:${c}"></span><span class="legend-label">${lbls[i]}</span>`;
+      legendDiv.appendChild(item);
+    });
+  });
+
+  // Racial disparity choropleth
+  const ratioByState = {};
+  Object.keys(minorityData).forEach(s => {
+    const md2 = minorityData[s];
+    const wd2 = whiteData[s];
+    if (md2 && wd2 && wd2.rate > 0) {
+      ratioByState[s] = parseFloat((md2.rate / wd2.rate).toFixed(2));
+    }
+  });
+
+  const ratioColors = ['#fef3c7','#fde68a','#f59e0b','#c2410c','#7c2d12'];
+  const ratioThresholds = [0, 1.2, 1.6, 2.2, 3.0];
+
+  const racialMapDiv = document.getElementById('racialChoropleth');
+  const rW = racialMapDiv.offsetWidth || 760;
+  const rH = Math.round(rW * 0.6);
+
+  const racialSvg = d3.select('#racialChoropleth').append('svg')
+    .attr('viewBox', `0 0 ${rW} ${rH}`)
+    .attr('width', '100%');
+
+  const ratioScale = d3.scaleThreshold()
+    .domain(ratioThresholds.slice(1))
+    .range(ratioColors);
+
+  const rProjection = d3.geoAlbersUsa().scale(rW * 1.3).translate([rW / 2, rH / 2]);
+  const rPathGen = d3.geoPath(rProjection);
+
+  const ratioTooltip = d3.select('body').append('div')
+    .style('position', 'absolute')
+    .style('background', '#1a1a1a')
+    .style('color', '#fff')
+    .style('font-family', 'DM Sans, sans-serif')
+    .style('font-size', '12px')
+    .style('padding', '8px 12px')
+    .style('border-radius', '3px')
+    .style('pointer-events', 'none')
+    .style('opacity', 0)
+    .style('z-index', 9999);
+
+  d3.json('https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json').then(us2 => {
+    const sf2 = topojson.feature(us2, us2.objects.states).features;
+    const stateNames2 = {};
+    Object.entries({
+      "01":"Alabama","02":"Alaska","04":"Arizona","05":"Arkansas","06":"California",
+      "08":"Colorado","09":"Connecticut","10":"Delaware","11":"District of Columbia",
+      "12":"Florida","13":"Georgia","15":"Hawaii","16":"Idaho","17":"Illinois",
+      "18":"Indiana","19":"Iowa","20":"Kansas","21":"Kentucky","22":"Louisiana",
+      "23":"Maine","24":"Maryland","25":"Massachusetts","26":"Michigan","27":"Minnesota",
+      "28":"Mississippi","29":"Missouri","30":"Montana","31":"Nebraska","32":"Nevada",
+      "33":"New Hampshire","34":"New Jersey","35":"New Mexico","36":"New York",
+      "37":"North Carolina","38":"North Dakota","39":"Ohio","40":"Oklahoma","41":"Oregon",
+      "42":"Pennsylvania","44":"Rhode Island","45":"South Carolina","46":"South Dakota",
+      "47":"Tennessee","48":"Texas","49":"Utah","50":"Vermont","51":"Virginia",
+      "53":"Washington","54":"West Virginia","55":"Wisconsin","56":"Wyoming"
+    }).forEach(([fips, name]) => stateNames2[fips] = name);
+
+    racialSvg.selectAll('path')
+      .data(sf2)
+      .join('path')
+      .attr('d', rPathGen)
+      .attr('fill', d => {
+        const fips = String(d.id).padStart(2, '0');
+        const name = stateNames2[fips];
+        const ratio = ratioByState[name];
+        return ratio != null ? ratioScale(ratio) : '#e5e7eb';
+      })
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 0.5)
+      .on('mousemove', function(event, d) {
+        const fips = String(d.id).padStart(2, '0');
+        const name = stateNames2[fips] || 'Unknown';
+        const ratio = ratioByState[name];
+        ratioTooltip
+          .style('opacity', 1)
+          .style('left', (event.pageX + 12) + 'px')
+          .style('top', (event.pageY - 28) + 'px')
+          .html(`<strong>${name}</strong><br>${ratio != null ? ratio.toFixed(2) + '× minority-to-white ratio' : 'Data suppressed'}`);
+      })
+      .on('mouseleave', () => ratioTooltip.style('opacity', 0));
+
+    const rLegendDiv = document.getElementById('racialMapLegend');
+    rLegendDiv.innerHTML = '<span style="margin-right:8px;color:#6b6b6b">Minority-to-white ratio:</span>';
+    const rLbls = ['< 1.2×', '1.2–1.6×', '1.6–2.2×', '2.2–3.0×', '3.0×+'];
+    ratioColors.forEach((c, i) => {
+      const item = document.createElement('span');
+      item.className = 'legend-item';
+      item.innerHTML = `<span class="legend-swatch" style="background:${c}"></span><span class="legend-label">${rLbls[i]}</span>`;
+      rLegendDiv.appendChild(item);
+    });
+  });
+});
+</script>
+</body>
+</html>
