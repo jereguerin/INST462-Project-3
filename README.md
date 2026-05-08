@@ -1,4 +1,4 @@
-# INST462-Project-3
+# INST462 PROJECT 3
 
 # minorities.xls - Dataset of minority young adult death rates from COVID-19 by state
 
